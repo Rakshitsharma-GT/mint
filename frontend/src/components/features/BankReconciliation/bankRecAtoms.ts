@@ -10,6 +10,10 @@ export interface SelectedBank extends Pick<BankAccount, 'name' | 'bank' | 'is_cr
 }
 export const selectedBankAccountAtom = atom<SelectedBank | null>(null)
 
+export const selectedPartyTypeAtom = atom<string | undefined>(undefined);
+
+// Holds the ID of the selected party (e.g., 'CUST-00001' or 'SUPP-00001')
+export const selectedPartyAtom = atom<string | undefined>(undefined);
 export const bankRecDateAtom = atomWithStorage<{ fromDate: string, toDate: string }>("mint-bank-rec-date", {
     fromDate: getDatesForTimePeriod('This Month').fromDate,
     toDate: getDatesForTimePeriod('This Month').toDate

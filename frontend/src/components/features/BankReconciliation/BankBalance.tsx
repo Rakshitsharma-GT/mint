@@ -39,7 +39,7 @@ const BankBalance = () => {
 
 const OpeningBalance = () => {
     const bankAccount = useAtomValue(selectedBankAccountAtom)
-    const { data, isLoading } = useGetAccountOpeningBalance()
+    const { data, isLoading } = useGetAccountOpeningBalance("Bank")
 
     return <StatContainer className="min-w-48">
         <StatLabel>{_("Opening Balance")}</StatLabel>
@@ -49,7 +49,7 @@ const OpeningBalance = () => {
 
 const ClosingBalance = () => {
     const bankAccount = useAtomValue(selectedBankAccountAtom)
-    const { data, isLoading } = useGetAccountClosingBalance()
+    const { data, isLoading } = useGetAccountClosingBalance("Bank")
 
     return (
         <StatContainer className="min-w-48">
@@ -125,7 +125,7 @@ const ClosingBalanceAsPerStatement = () => {
 const Difference = () => {
     const bankAccount = useAtomValue(selectedBankAccountAtom)
 
-    const { data, isLoading } = useGetAccountClosingBalance()
+    const { data, isLoading } = useGetAccountClosingBalance("Bank")
 
     const value = useAtomValue(bankRecClosingBalanceAtom(bankAccount?.name ?? ''))
 
@@ -157,7 +157,7 @@ const ReconcileProgress = () => {
         revalidateOnFocus: false
     })
 
-    const { data: unreconciledTransactions, } = useGetUnreconciledTransactions()
+    const { data: unreconciledTransactions, } = useGetUnreconciledTransactions("Bank")
 
     const reconciledCount = (totalCount ?? 0) - (unreconciledTransactions?.message?.length ?? 0)
 

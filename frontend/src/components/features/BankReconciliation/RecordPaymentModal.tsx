@@ -1,5 +1,5 @@
 import { atom, useAtom, useAtomValue, useSetAtom } from "jotai"
-import { bankRecRecordPaymentModalAtom, bankRecSelectedTransactionAtom, bankRecUnreconcileModalAtom, SelectedBank, selectedBankAccountAtom } from "./bankRecAtoms"
+import { bankRecRecordPaymentModalAtom, bankRecSelectedTransactionAtom, bankRecUnreconcileModalAtom, SelectedBank, selectedBankAccountAtom, selectedPartyAtom } from "./bankRecAtoms"
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogHeader, DialogFooter, DialogClose, DialogTrigger } from "@/components/ui/dialog"
 import _ from "@/lib/translate"
 import { UnreconciledTransaction, useGetRuleForTransaction, useRefreshUnreconciledTransactions } from "./utils"
@@ -55,8 +55,9 @@ const RecordPaymentModal = () => {
 const RecordPaymentModalContent = () => {
 
     const selectedBankAccount = useAtomValue(selectedBankAccountAtom)
+    const selectedParty = useAtomValue(selectedPartyAtom)
 
-    const selectedTransaction = useAtomValue(bankRecSelectedTransactionAtom(selectedBankAccount?.name ?? ''))
+    const selectedTransaction = useAtomValue(bankRecSelectedTransactionAtom(selectedBankAccount?.name ?? selectedParty ?? ''))
 
     if (!selectedTransaction || !selectedBankAccount) {
         return <div className='p-4'>

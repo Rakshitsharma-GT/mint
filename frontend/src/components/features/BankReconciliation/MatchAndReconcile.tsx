@@ -1,6 +1,6 @@
 import { useAtom, useAtomValue, useSetAtom } from "jotai"
 import { MissingFiltersBanner } from "./MissingFiltersBanner"
-import { bankRecRecordJournalEntryModalAtom, bankRecRecordPaymentModalAtom, bankRecSelectedTransactionAtom, bankRecTransferModalAtom, selectedBankAccountAtom } from "./bankRecAtoms"
+import { bankRecRecordJournalEntryModalAtom, bankRecRecordPaymentModalAtom, bankRecSelectedTransactionAtom, bankRecTransferModalAtom, selectedBankAccountAtom, selectedPartyAtom } from "./bankRecAtoms"
 import { H4 } from "@/components/ui/typography"
 import { useMemo, useState } from "react"
 import { getCompanyCurrency } from "@/lib/company"
@@ -31,23 +31,38 @@ import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/componen
 import SelectedTransactionsTable from "./SelectedTransactionsTable"
 import MatchFilters from "./MatchFilters"
 
-const MatchAndReconcile = ({ contentHeight }: { contentHeight: number }) => {
-    const selectedBank = useAtomValue(selectedBankAccountAtom)
+// 1. DEFINE THE PROP INTERFACE
+interface MatchAndReconcileProps {
+    contentHeight: number;
+    dataSource: "Bank" | "Debtor"; // Added dataSource prop
+}
 
-    if (!selectedBank) {
+// 2. UPDATE THE COMPONENT SIGNATURE
+const MatchAndReconcile = ({ contentHeight, dataSource }: MatchAndReconcileProps) => {
+    const selectedBank = useAtomValue(selectedBankAccountAtom)
+    const selectedParty = useAtomValue(selectedPartyAtom)
+
+    // Conditional requirement: for Bank source require a selected bank, for Debtor require a selected party
+    if (dataSource === 'Bank' && !selectedBank) {
         return <MissingFiltersBanner text={_("Select a bank account to reconcile")} />
+    }
+
+    if (dataSource === 'Debtor' && !selectedParty) {
+        return <MissingFiltersBanner text={_("Select a customer or supplier to reconcile")} />
     }
 
     return <>
         <div className={`flex items-start space-x-2`} >
             <div className="flex-1">
                 <H4 className="text-sm font-medium">{_("Unreconciled Transactions")}</H4>
-                <UnreconciledTransactions contentHeight={contentHeight} />
+                {/* 3. PASS PROP DOWN */}
+                <UnreconciledTransactions contentHeight={contentHeight} dataSource={dataSource} />
             </div>
             <Separator orientation="vertical" style={{ minHeight: `${contentHeight}px` }} />
             <div className="flex-1 px-1">
                 <H4 className="text-sm font-medium">{_("Match or Create")}</H4>
-                <VouchersSection contentHeight={contentHeight} />
+                {/* 3. PASS PROP DOWN */}
+                <VouchersSection contentHeight={contentHeight} dataSource={dataSource} />
             </div>
         </div>
         <TransferModal />
@@ -57,7 +72,8 @@ const MatchAndReconcile = ({ contentHeight }: { contentHeight: number }) => {
 }
 
 
-const UnreconciledTransactions = ({ contentHeight }: { contentHeight: number }) => {
+// 4. UPDATE UNRECONCILEDTRANSACTIONS SIGNATURE
+const UnreconciledTransactions = ({ contentHeight, dataSource }: { contentHeight: number, dataSource: "Bank" | "Debtor" }) => {
     const bankAccount = useAtomValue(selectedBankAccountAtom)
 
     const currency = bankAccount?.account_currency ?? getCompanyCurrency(bankAccount?.company ?? '')
@@ -67,7 +83,11 @@ const UnreconciledTransactions = ({ contentHeight }: { contentHeight: number }) 
     const groupSeparator = formatInfo.group_sep || ","
     const decimalSeparator = formatInfo.decimal_str || "."
 
-    const { data: unreconciledTransactions, isLoading, error } = useGetUnreconciledTransactions()
+    // 5. PASS PROP TO CUSTOM HOOK
+    const { data: unreconciledTransactions, isLoading, error } = useGetUnreconciledTransactions(dataSource)
+
+    // Debug: log fetch result for troubleshooting
+    console.debug('[UnreconciledTransactions] dataSource:', dataSource, 'unreconciledTransactions:', unreconciledTransactions, 'isLoading:', isLoading, 'error:', error)
 
     const [typeFilter, setTypeFilter] = useState('All')
     const [amountFilter, setAmountFilter] = useState<{ value: number, stringValue?: string | number }>({
@@ -126,7 +146,9 @@ const UnreconciledTransactions = ({ contentHeight }: { contentHeight: number }) 
 
     }, [searchIndex, search, typeFilter, amountFilter.value, unreconciledTransactions?.message])
 
-    const setSelectedTransaction = useSetAtom(bankRecSelectedTransactionAtom(bankAccount?.name || ''))
+    const selectedParty = useAtomValue(selectedPartyAtom)
+    const selectedKey = bankAccount?.name ?? selectedParty ?? ''
+    const setSelectedTransaction = useSetAtom(bankRecSelectedTransactionAtom(selectedKey))
 
     const onFilterChange = () => {
         setSelectedTransaction([])
@@ -223,7 +245,9 @@ const UnreconciledTransactionItem = ({ transaction }: { transaction: Unreconcile
 
     const selectedBank = useAtomValue(selectedBankAccountAtom)
 
-    const [selectedTransaction, setSelectedTransaction] = useAtom(bankRecSelectedTransactionAtom(selectedBank?.name || ''))
+    const selectedParty = useAtomValue(selectedPartyAtom)
+    const selectedTransactionKey = selectedBank?.name ?? selectedParty ?? ''
+    const [selectedTransaction, setSelectedTransaction] = useAtom(bankRecSelectedTransactionAtom(selectedTransactionKey))
 
     const { amount, isWithdrawal } = useIsTransactionWithdrawal(transaction)
 
@@ -278,10 +302,12 @@ const UnreconciledTransactionItem = ({ transaction }: { transaction: Unreconcile
 }
 
 
-const VouchersSection = ({ contentHeight }: { contentHeight: number }) => {
+// 6. UPDATE VOUCHERSSECTION SIGNATURE
+const VouchersSection = ({ contentHeight, dataSource }: { contentHeight: number, dataSource: "Bank" | "Debtor" }) => {
 
     const selectedBank = useAtomValue(selectedBankAccountAtom)
-    const selectedTransactions = useAtomValue(bankRecSelectedTransactionAtom(selectedBank?.name || ''))
+    const selectedParty = useAtomValue(selectedPartyAtom)
+    const selectedTransactions = useAtomValue(bankRecSelectedTransactionAtom(selectedBank?.name ?? selectedParty ?? ''))
 
 
     if (selectedTransactions.length === 0) {
@@ -289,15 +315,18 @@ const VouchersSection = ({ contentHeight }: { contentHeight: number }) => {
     }
 
     if (selectedTransactions.length > 1) {
-        return <OptionsForMultipleTransactions transactions={selectedTransactions} />
+        // 7. PASS PROP DOWN
+        return <OptionsForMultipleTransactions transactions={selectedTransactions} dataSource={dataSource} />
     }
 
     return <div style={{ minHeight: contentHeight }} className="mt-2">
-        <OptionsForSingleTransaction transaction={selectedTransactions[0]} contentHeight={contentHeight} />
+        {/* 7. PASS PROP DOWN */}
+        <OptionsForSingleTransaction transaction={selectedTransactions[0]} contentHeight={contentHeight} dataSource={dataSource} />
     </div>
 }
 
-const OptionsForMultipleTransactions = ({ transactions }: { transactions: UnreconciledTransaction[] }) => {
+// 8. UPDATE OptionsForMultipleTransactions SIGNATURE
+const OptionsForMultipleTransactions = ({ transactions, dataSource: _dataSource }: { transactions: UnreconciledTransaction[], dataSource: "Bank" | "Debtor" }) => {
 
     const setTransferModalOpen = useSetAtom(bankRecTransferModalAtom)
     const setRecordPaymentModalOpen = useSetAtom(bankRecRecordPaymentModalAtom)
@@ -378,7 +407,8 @@ const OptionsForMultipleTransactions = ({ transactions }: { transactions: Unreco
 }
 
 
-const OptionsForSingleTransaction = ({ transaction, contentHeight }: { transaction: UnreconciledTransaction, contentHeight: number }) => {
+// 9. UPDATE OptionsForSingleTransaction SIGNATURE
+const OptionsForSingleTransaction = ({ transaction, contentHeight, dataSource }: { transaction: UnreconciledTransaction, contentHeight: number, dataSource: "Bank" | "Debtor" }) => {
 
     const setTransferModalOpen = useSetAtom(bankRecTransferModalAtom)
     const setRecordPaymentModalOpen = useSetAtom(bankRecRecordPaymentModalAtom)
@@ -432,7 +462,8 @@ const OptionsForSingleTransaction = ({ transaction, contentHeight }: { transacti
             </div>
         </TooltipProvider>
         {transaction.matched_rule && <RuleAction transaction={transaction} />}
-        <VouchersForTransaction transaction={transaction} contentHeight={contentHeight} />
+        {/* 10. PASS PROP DOWN */}
+        <VouchersForTransaction transaction={transaction} contentHeight={contentHeight} dataSource={dataSource} />
     </div>
 }
 
@@ -591,9 +622,11 @@ const RuleAction = ({ transaction }: { transaction: UnreconciledTransaction }) =
     )
 }
 
-const VouchersForTransaction = ({ transaction, contentHeight }: { transaction: UnreconciledTransaction, contentHeight: number }) => {
+// 11. UPDATE VouchersForTransaction SIGNATURE
+const VouchersForTransaction = ({ transaction, contentHeight, dataSource }: { transaction: UnreconciledTransaction, contentHeight: number, dataSource: "Bank" | "Debtor" }) => {
 
-    const { data: vouchers, isLoading, error } = useGetVouchersForTransaction(transaction)
+    // 12. PASS PROP TO CUSTOM HOOK
+    const { data: vouchers, isLoading, error } = useGetVouchersForTransaction(transaction, dataSource)
 
     if (error) {
         return <ErrorBanner error={error} />
@@ -625,7 +658,8 @@ const VouchersForTransaction = ({ transaction, contentHeight }: { transaction: U
         <Virtuoso
             data={vouchers?.message}
             itemContent={(index, voucher) => (
-                <VoucherItem voucher={voucher} index={index} />
+                // FIX: Pass dataSource to VoucherItem
+                <VoucherItem voucher={voucher} index={index} dataSource={dataSource} />
             )}
             style={{ height: contentHeight }}
             totalCount={vouchers?.message.length}
@@ -633,10 +667,12 @@ const VouchersForTransaction = ({ transaction, contentHeight }: { transaction: U
     </div >
 }
 
-const VoucherItem = ({ voucher, index }: { voucher: LinkedPayment, index: number }) => {
+// FIX: UPDATE VoucherItem SIGNATURE AND PASS dataSource TO HOOK
+const VoucherItem = ({ voucher, index, dataSource }: { voucher: LinkedPayment, index: number, dataSource: "Bank" | "Debtor" }) => {
 
     const selectedBank = useAtomValue(selectedBankAccountAtom)
-    const selectedTransaction = useAtomValue(bankRecSelectedTransactionAtom(selectedBank?.name || ''))
+    const selectedParty = useAtomValue(selectedPartyAtom)
+    const selectedTransaction = useAtomValue(bankRecSelectedTransactionAtom(selectedBank?.name ?? selectedParty ?? ''))
 
     const { amountMatches, postingDateMatches, referenceDateMatches, referenceMatchesFull, referenceMatchesPartial, isSuggested } = useMemo(() => {
 
@@ -662,7 +698,8 @@ const VoucherItem = ({ voucher, index }: { voucher: LinkedPayment, index: number
 
     }, [voucher, selectedTransaction, index])
 
-    const { reconcileTransaction, loading } = useReconcileTransaction()
+    // FIX: Pass dataSource to useReconcileTransaction hook
+    const { reconcileTransaction, loading } = useReconcileTransaction(dataSource)
 
     const onClick = () => {
         if (!selectedTransaction) {

@@ -59,7 +59,7 @@ const BankPickerItem = ({ bank }: { bank: SelectedBank }) => {
 
     const isSelected = selectedBank?.name === bank.name
 
-    const { mutate } = useGetUnreconciledTransactions()
+    const { mutate } = useGetUnreconciledTransactions("Bank")
 
     const onSelect = () => {
         setSelectedBank(bank)

@@ -43,7 +43,7 @@ const SettingsDialogContent = ({ onClose }: { onClose: VoidFunction }) => {
         }
     })
 
-    const { mutate, error: fetchError } = useFrappeGetDoc<MintSettings>("Mint Settings", "Mint Settings", undefined, {
+    const { mutate, error: fetchError } = useFrappeGetDoc<MintSettings>("Mint Settings TB", "Mint Settings TB", undefined, {
         onSuccess: (data) => {
             form.reset(data)
         },
@@ -53,7 +53,7 @@ const SettingsDialogContent = ({ onClose }: { onClose: VoidFunction }) => {
     const { updateDoc, loading, error } = useFrappeUpdateDoc<MintSettings>()
 
     const onSubmit = (data: MintSettings) => {
-        updateDoc("Mint Settings", "Mint Settings", data)
+        updateDoc("Mint Settings TB", "Mint Settings TB", data)
             .then(() => {
                 toast.success(_("Settings updated"))
                 mutate()
@@ -145,14 +145,14 @@ const SettingsDialogContent = ({ onClose }: { onClose: VoidFunction }) => {
 
 //     const form = useFormContext()
 
-//     const { data, error, mutate } = useFrappeGetCall("mint.apis.google_ai.get_list_of_processors", {
+//     const { data, error, mutate } = useFrappeGetCall("truebalance.apis.google_ai.get_list_of_processors", {
 //         processor_type: "BANK_STATEMENT"
 //     }, undefined, {
 //         revalidateOnFocus: false,
 //         revalidateIfStale: false
 //     })
 
-//     const { call: createProcessor } = useFrappePostCall('mint.apis.google_ai.create_document_processor')
+//     const { call: createProcessor } = useFrappePostCall('truebalance.apis.google_ai.create_document_processor')
 
 //     const onProcessorCreate = () => {
 //         createProcessor({})

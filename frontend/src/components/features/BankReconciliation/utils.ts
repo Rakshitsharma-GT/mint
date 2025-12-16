@@ -290,7 +290,7 @@ export const useRefreshUnreconciledTransactions = (dataSource: "Bank" | "Debtor"
 // >>> MODIFIED: ADD dataSource PARAMETER
 export const useReconcileTransaction = (dataSource: "Bank" | "Debtor") => { // <<< ACCEPT DATA SOURCE
 
-    const { call, loading } = useFrappePostCall<{ message: BankTransaction }>('mint.apis.bank_reconciliation.reconcile_vouchers')
+    const { call, loading } = useFrappePostCall<{ message: BankTransaction }>('truebalance.apis.bank_reconciliation.reconcile_vouchers')
 
     // Pass data source to hook used internally
     const onReconcileTransaction = useRefreshUnreconciledTransactions(dataSource) 
@@ -341,7 +341,7 @@ export const useGetBankAccounts = (onSuccess?: (data?: Omit<SelectedBank, 'logo'
 
     const company = useCurrentCompany()
 
-    const { data, isLoading, error } = useFrappeGetCall<{ message: BankAccountWithCurrency[] }>('mint.apis.bank_account.get_list', {
+    const { data, isLoading, error } = useFrappeGetCall<{ message: BankAccountWithCurrency[] }>('truebalance.apis.bank_account.get_list', {
         company: company
     }, undefined, {
         revalidateOnFocus: false,
@@ -391,7 +391,7 @@ export const useIsTransactionWithdrawal = (transaction: UnreconciledTransaction)
 
 export const useGetRuleForTransaction = (transaction: UnreconciledTransaction) => {
 
-    return useFrappeGetDoc<MintBankTransactionRule>('Mint Bank Transaction Rule', transaction.matched_rule,
+    return useFrappeGetDoc<MintBankTransactionRule>('Mint Bank Transaction Rule TB', transaction.matched_rule,
         transaction.matched_rule ? undefined : null, {
         revalidateOnFocus: false,
         revalidateIfStale: false

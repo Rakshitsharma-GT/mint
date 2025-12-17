@@ -20,7 +20,7 @@ export const useGetParties = (partyType: string | undefined, company: string | u
     const shouldFetch = !!partyType && !!company && ALLOWED_PARTY_TYPES.includes(partyType); 
 
     // NOTE: This calls the new Python API endpoint defined in party.py.
-    return useFrappeGetCall<{ message: { name: string, title: string }[] }>('mint.apis.party.get_party_list', {
+    return useFrappeGetCall<{ message: { name: string, title: string }[] }>('truebalance.apis.party.get_party_list', {
         party_type: partyType,
         company: company
     }, shouldFetch ? [partyType, company] : null, {

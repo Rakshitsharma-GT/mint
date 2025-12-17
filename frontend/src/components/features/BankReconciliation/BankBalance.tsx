@@ -87,7 +87,7 @@ const ClosingBalanceAsPerStatement = () => {
 
     const currency = bankAccount?.account_currency ?? getCompanyCurrency(bankAccount?.company ?? '')
     const currencySymbol = getCurrencySymbol(currency)
-    
+
     const formatInfo = getCurrencyFormatInfo(currency)
     const groupSeparator = formatInfo.group_sep || ","
     const decimalSeparator = formatInfo.decimal_str || "."

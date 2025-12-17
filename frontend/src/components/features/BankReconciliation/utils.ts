@@ -13,7 +13,7 @@ import _ from '@/lib/translate'
 import { MintBankTransactionRule } from '@/types/Mint/MintBankTransactionRule'
 
 // >>> MODIFIED: ADD dataSource PARAMETER
-export const useGetAccountOpeningBalance = (dataSource: "Bank" | "Debtor") => { 
+export const useGetAccountOpeningBalance = (dataSource: "Bank" | "Debtor") => {
 
     const companyID = useCurrentCompany()
     const bankAccount = useAtomValue(selectedBankAccountAtom)
@@ -68,7 +68,7 @@ export type UnreconciledTransaction = Pick<BankTransaction, 'name' | 'matched_ru
 
 
 // >>> MODIFIED: The main hook for fetching external entries
-export const useGetUnreconciledTransactions = (dataSource: "Bank" | "Debtor") => { 
+export const useGetUnreconciledTransactions = (dataSource: "Bank" | "Debtor") => {
     // Get both potential account IDs
     const bankAccount = useAtomValue(selectedBankAccountAtom);
     const partyId = useAtomValue(selectedPartyAtom); // The ID (CUST-00001 or SUPP-00001)
@@ -76,7 +76,7 @@ export const useGetUnreconciledTransactions = (dataSource: "Bank" | "Debtor") =>
 
     // --- DETERMINE THE ACTIVE ACCOUNT ID ---
     let accountId: string | undefined = undefined;
-    
+
     if (dataSource === 'Bank') {
         // If Bank, use the selected Bank Account name
         accountId = bankAccount?.name;
@@ -84,7 +84,7 @@ export const useGetUnreconciledTransactions = (dataSource: "Bank" | "Debtor") =>
         // If Debtor, use the selected Party ID
         accountId = partyId;
     }
-    
+
     // --- CONTROL FETCHING ---
     // Only proceed if we have a valid ID and dates
     const shouldFetch = !!accountId && !!dates.fromDate && !!dates.toDate;
@@ -94,29 +94,29 @@ export const useGetUnreconciledTransactions = (dataSource: "Bank" | "Debtor") =>
 
     if (!shouldFetch) {
         // Return a disabled SWR response so callers always get a consistent shape (includes mutate)
-        return useFrappeGetCall<{ message: UnreconciledTransaction[] }>('mint.apis.transactions.get_bank_transactions', {
+        return useFrappeGetCall<{ message: UnreconciledTransaction[] }>('truebalance.apis.transactions.get_bank_transactions', {
             bank_account: accountId,
             from_date: dates.fromDate,
             to_date: dates.toDate,
             data_source: dataSource
-        }, null, { 
+        }, null, {
             revalidateOnFocus: false,
             revalidateIfStale: false
         });
     }
-    
+
     // SWR Key MUST change when any input changes to trigger a new fetch
     const swrKey = `bank-reco-unreco-${accountId}-${dates.fromDate}-${dates.toDate}-${dataSource}`;
 
     console.debug('[useGetUnreconciledTransactions] swrKey:', swrKey)
 
-    return useFrappeGetCall<{ message: UnreconciledTransaction[] }>('mint.apis.transactions.get_bank_transactions', {
+    return useFrappeGetCall<{ message: UnreconciledTransaction[] }>('truebalance.apis.transactions.get_bank_transactions', {
         // The Python API expects the target ID (Bank or Party) in 'bank_account'
-        bank_account: accountId, 
+        bank_account: accountId,
         from_date: dates.fromDate,
         to_date: dates.toDate,
-        data_source: dataSource 
-    }, swrKey, { 
+        data_source: dataSource
+    }, swrKey, {
         revalidateOnFocus: false,
         revalidateIfStale: false
     });
@@ -144,7 +144,7 @@ export const useGetBankTransactions = (dataSource: "Bank" | "Debtor") => { // <<
 
     // --- DETERMINE THE ACTIVE ACCOUNT ID ---
     let accountId: string | undefined = undefined;
-    
+
     if (dataSource === 'Bank') {
         // If Bank, use the selected Bank Account name
         accountId = bankAccount?.name;
@@ -152,14 +152,14 @@ export const useGetBankTransactions = (dataSource: "Bank" | "Debtor") => { // <<
         // If Debtor, use the selected Party ID
         accountId = partyId;
     }
-    
+
     // --- CONTROL FETCHING ---
     // Only proceed if we have a valid ID and dates
     const shouldFetch = !!accountId && !!dates.fromDate && !!dates.toDate;
 
     if (!shouldFetch) {
         // Return a disabled SWR response so callers always get a consistent shape (includes mutate)
-        return useFrappeGetCall<{ message: BankTransaction[] }>('mint.apis.transactions.get_bank_transactions', {
+        return useFrappeGetCall<{ message: BankTransaction[] }>('truebalance.apis.transactions.get_bank_transactions', {
             bank_account: accountId,
             from_date: dates.fromDate,
             to_date: dates.toDate,
@@ -170,7 +170,7 @@ export const useGetBankTransactions = (dataSource: "Bank" | "Debtor") => { // <<
 
     const swrKey = `bank-reconciliation-bank-transactions-${accountId}-${dates.fromDate}-${dates.toDate}-${dataSource}`;
 
-    return useFrappeGetCall<{ message: BankTransaction[] }>('mint.apis.transactions.get_bank_transactions', {
+    return useFrappeGetCall<{ message: BankTransaction[] }>('truebalance.apis.transactions.get_bank_transactions', {
         bank_account: accountId,
         from_date: dates.fromDate,
         to_date: dates.toDate,
@@ -186,8 +186,8 @@ export const useGetVouchersForTransaction = (transaction: UnreconciledTransactio
     const dates = useAtomValue(bankRecDateAtom)
     const matchFilters = useAtomValue(bankRecMatchFilters)
 
-    return useFrappeGetCall<{ message: LinkedPayment[] }>('mint.apis.reconciliation.get_vouchers_for_reco', {
-        bank_transaction_name: transaction.name, 
+    return useFrappeGetCall<{ message: LinkedPayment[] }>('truebalance.apis.reconciliation.get_vouchers_for_reco', {
+        bank_transaction_name: transaction.name,
         document_types: matchFilters ?? ['payment_entry', 'journal_entry'],
         from_date: dates.fromDate,
         to_date: dates.toDate,
@@ -207,33 +207,33 @@ export const useRefreshUnreconciledTransactions = (dataSource: "Bank" | "Debtor"
 
     const selectedBank = useAtomValue(selectedBankAccountAtom)
     // >>> FIX 1: Explicitly get partyId from the atom value
-    const partyId = useAtomValue(selectedPartyAtom); 
+    const partyId = useAtomValue(selectedPartyAtom);
     const dates = useAtomValue(bankRecDateAtom)
     const matchFilters = useAtomValue(bankRecMatchFilters)
-    
+
     // >>> FIX 2: Correctly determine the account ID for the selected transaction atom
     const accountId = dataSource === 'Bank' ? selectedBank?.name : partyId;
-    
+
     // If accountId is null, use a safe empty string or a default value for the atom key
     const atomKey = accountId || '';
-    
+
     // Use the correctly scoped accountId in the atom key
-    const setSelectedTransaction = useSetAtom(bankRecSelectedTransactionAtom(atomKey)) 
+    const setSelectedTransaction = useSetAtom(bankRecSelectedTransactionAtom(atomKey))
 
     const { mutate } = useSWRConfig()
 
     // Pass data source to hook used internally
-    const { data: unreconciledTransactions } = useGetUnreconciledTransactions(dataSource) 
+    const { data: unreconciledTransactions } = useGetUnreconciledTransactions(dataSource)
 
     /** * This function should be called after a transaction is reconciled
      * It will get the next unreconciled transaction and select it
      * And then refresh the balance + unreconciled transactions list
      */
     const onReconcileTransaction = (transaction: UnreconciledTransaction, updatedTransaction?: BankTransaction) => {
-        
+
         // Use the determined accountId for the mutate keys
-        const accountMutateKey = accountId || selectedBank?.name; 
-        
+        const accountMutateKey = accountId || selectedBank?.name;
+
         // If the updated transaction has an unallocated amount of 0, then we need to select the next unreconciled transaction
         if (updatedTransaction && updatedTransaction?.unallocated_amount !== 0) {
             mutate(`bank-reco-unreco-${accountMutateKey}-${dates.fromDate}-${dates.toDate}-${dataSource}`)
@@ -242,7 +242,7 @@ export const useRefreshUnreconciledTransactions = (dataSource: "Bank" | "Debtor"
             mutate(`bank-reconciliation-vouchers-${transaction.name}-${dates.fromDate}-${dates.toDate}-${matchFilters.join(',')}-${dataSource}`)
             return
         }
-        
+
         const currentIndex = unreconciledTransactions?.message.findIndex(t => t.name === transaction.name)
         let nextTransaction = null
 
@@ -293,7 +293,7 @@ export const useReconcileTransaction = (dataSource: "Bank" | "Debtor") => { // <
     const { call, loading } = useFrappePostCall<{ message: BankTransaction }>('truebalance.apis.bank_reconciliation.reconcile_vouchers')
 
     // Pass data source to hook used internally
-    const onReconcileTransaction = useRefreshUnreconciledTransactions(dataSource) 
+    const onReconcileTransaction = useRefreshUnreconciledTransactions(dataSource)
 
     const setBankRecUnreconcileModalAtom = useSetAtom(bankRecUnreconcileModalAtom)
 

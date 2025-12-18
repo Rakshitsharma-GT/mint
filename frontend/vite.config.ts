@@ -18,7 +18,7 @@ export default defineConfig({
 		}
 	},
 	build: {
-		outDir: '../mint/public/mint',
+		outDir: '../truebalance/public/truebalance',
 		emptyOutDir: true,
 		target: 'es2015',
 	},

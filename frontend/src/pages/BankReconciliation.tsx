@@ -19,6 +19,7 @@ import { useLayoutEffect, useRef, useState } from "react"
 
 
 const BankReconciliation = () => {
+    console.log("TRUEBALANCE NEW UI LOADED");
 
     const [headerHeight, setHeaderHeight] = useState(0)
     // Keep this state for the switch
@@ -41,7 +42,7 @@ const BankReconciliation = () => {
                     {/* H1 Title and Switch */}
                     <div className="flex flex-col"> 
                         <H1 className="text-base font-medium">
-                            <span className="text-4xl font-extrabold text-emerald-500">mint</span>&nbsp; {_("Reconciliation Tool")}
+                            <span className="text-4xl font-extrabold text-emerald-500">TrueBalance</span>&nbsp; {_("Reconciliation Tool")}
                         </H1>
                         {/* Data Source Switch */}
                         <div className="mt-2 text-sm flex gap-4">

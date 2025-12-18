@@ -1,12 +1,12 @@
 {
  "content": null,
- "creation": "2025-11-10 09:00:00.000000",
+ "creation": "2025-11-10 09:00:00",
  "docstatus": 0,
  "doctype": "Page",
  "idx": 0,
- "modified": "2025-11-10 09:00:00.000000",
+ "modified": "2025-12-18 22:36:17.154609",
  "modified_by": "Administrator",
- "module": "Mint",
+ "module": "TrueBalance",
  "name": "bank-reconciliation",
  "owner": "Administrator",
  "page_name": "bank-reconciliation",
@@ -15,5 +15,5 @@
  "standard": "Yes",
  "style": null,
  "system_page": 0,
- "title": "Bank Reconciliation"
+ "title": "Bank Reconciliation - TrueBalance"
 }

@@ -1,0 +1,196 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-12-10 02:54:50.710605",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "company",
+  "party_type",
+  "party",
+  "currency",
+  "source_import",
+  "payment_amount_credit",
+  "customer_reference",
+  "allocated_amount",
+  "unallocated_amount",
+  "description",
+  "status",
+  "column_break_jsfg",
+  "statement_date",
+  "matched_doctype",
+  "matched_document_name",
+  "unique_hash",
+  "payment_amount_debit",
+  "is_reconciled",
+  "reconciled_with",
+  "reconciled_by",
+  "reconciled_at",
+  "transaction_type",
+  "reference_number",
+  "section_break_lyxt",
+  "audit_entries"
+ ],
+ "fields": [
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "party_type",
+   "fieldtype": "Data",
+   "label": "Party Type"
+  },
+  {
+   "fieldname": "party",
+   "fieldtype": "Data",
+   "label": "Party"
+  },
+  {
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency"
+  },
+  {
+   "fieldname": "source_import",
+   "fieldtype": "Link",
+   "label": "Source Import",
+   "options": "Debtor Ledger Import"
+  },
+  {
+   "fieldname": "payment_amount_credit",
+   "fieldtype": "Currency",
+   "label": "Payment Amount (Credit)"
+  },
+  {
+   "fieldname": "customer_reference",
+   "fieldtype": "Data",
+   "label": "Customer Reference"
+  },
+  {
+   "fieldname": "allocated_amount",
+   "fieldtype": "Currency",
+   "label": "Allocated Amount"
+  },
+  {
+   "fieldname": "unallocated_amount",
+   "fieldtype": "Currency",
+   "label": "Unallocated Amount"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "label": "Description"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Unreconciled\nPartially Reconciled\nFully Reconciled"
+  },
+  {
+   "fieldname": "column_break_jsfg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "statement_date",
+   "fieldtype": "Date",
+   "label": "Statement Date"
+  },
+  {
+   "fieldname": "matched_doctype",
+   "fieldtype": "Link",
+   "label": "Matched Doctype",
+   "options": "DocType"
+  },
+  {
+   "fieldname": "matched_document_name",
+   "fieldtype": "Dynamic Link",
+   "label": "Matched Document Name",
+   "options": "matched_doctype"
+  },
+  {
+   "fieldname": "unique_hash",
+   "fieldtype": "Data",
+   "label": "Unique Hash",
+   "unique": 1
+  },
+  {
+   "fieldname": "payment_amount_debit",
+   "fieldtype": "Currency",
+   "label": "Payment Amount (Debit)"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_reconciled",
+   "fieldtype": "Check",
+   "label": "Is Reconciled"
+  },
+  {
+   "fieldname": "reconciled_with",
+   "fieldtype": "Data",
+   "label": "Reconciled With"
+  },
+  {
+   "fieldname": "reconciled_by",
+   "fieldtype": "Data",
+   "label": "Reconciled By"
+  },
+  {
+   "fieldname": "reconciled_at",
+   "fieldtype": "Datetime",
+   "label": "Reconciled At"
+  },
+  {
+   "fieldname": "transaction_type",
+   "fieldtype": "Select",
+   "label": "Transaction Type",
+   "options": "Deposit\nWithdrawal"
+  },
+  {
+   "fieldname": "reference_number",
+   "fieldtype": "Data",
+   "label": "Reference Number"
+  },
+  {
+   "fieldname": "section_break_lyxt",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "audit_entries",
+   "fieldtype": "Table",
+   "label": "Audit Entries",
+   "options": "Debtor Statement Audit"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-12-19 02:37:16.487680",
+ "modified_by": "Administrator",
+ "module": "TrueBalance",
+ "name": "Debtor Statement Entry",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

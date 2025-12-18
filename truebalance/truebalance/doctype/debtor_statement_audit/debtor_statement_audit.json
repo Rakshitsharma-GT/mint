@@ -1,0 +1,60 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-12-10 02:50:19.369367",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "reconciliation_action",
+  "matched_doctype",
+  "matched_document_name",
+  "variance_amount",
+  "audit_note"
+ ],
+ "fields": [
+  {
+   "fieldname": "reconciliation_action",
+   "fieldtype": "Select",
+   "label": "Reconciliation Action",
+   "options": "\nPayment Matched\nJournal Adjustment\nIgnored/Variance"
+  },
+  {
+   "fieldname": "matched_doctype",
+   "fieldtype": "Link",
+   "label": "Matched Doctype",
+   "options": "DocType"
+  },
+  {
+   "fieldname": "matched_document_name",
+   "fieldtype": "Dynamic Link",
+   "label": "Matched Document Name",
+   "options": "matched_doctype"
+  },
+  {
+   "fieldname": "variance_amount",
+   "fieldtype": "Currency",
+   "label": "Variance Amount"
+  },
+  {
+   "fieldname": "audit_note",
+   "fieldtype": "Small Text",
+   "label": "Audit Note"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-12-19 02:37:17.907462",
+ "modified_by": "Administrator",
+ "module": "TrueBalance",
+ "name": "Debtor Statement Audit",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

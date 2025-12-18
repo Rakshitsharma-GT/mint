@@ -1,0 +1,147 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-12-10 03:19:42.475486",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "company",
+  "customer",
+  "party_type",
+  "party",
+  "refresh_results",
+  "column_break_rqpv",
+  "statement_from_date",
+  "statement_to_date",
+  "source_import",
+  "section_break_repp",
+  "opening_receivable_balance",
+  "column_break_ozat",
+  "closing_statement_balance",
+  "section_break_iptv",
+  "show_only_unreconciled",
+  "html_results",
+  "section_break_bwah",
+  "reconciliation_tool"
+ ],
+ "fields": [
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "party_type",
+   "fieldtype": "Link",
+   "label": "Party Type",
+   "link_filters": "[[\"DocType\",\"name\",\"in\",[\"Supplier\",\"Customer\"]]]",
+   "options": "DocType"
+  },
+  {
+   "fieldname": "party",
+   "fieldtype": "Dynamic Link",
+   "label": "Party",
+   "options": "party_type"
+  },
+  {
+   "fieldname": "refresh_results",
+   "fieldtype": "Button",
+   "label": "Refresh Results"
+  },
+  {
+   "fieldname": "column_break_rqpv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "statement_from_date",
+   "fieldtype": "Date",
+   "label": "Statement From Date"
+  },
+  {
+   "fieldname": "statement_to_date",
+   "fieldtype": "Date",
+   "label": "Statement To Date"
+  },
+  {
+   "fieldname": "source_import",
+   "fieldtype": "Link",
+   "label": "Source Import",
+   "options": "Debtor Ledger Import"
+  },
+  {
+   "fieldname": "section_break_repp",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "opening_receivable_balance",
+   "fieldtype": "Currency",
+   "label": "Opening Receivable Balance"
+  },
+  {
+   "fieldname": "column_break_ozat",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "closing_statement_balance",
+   "fieldtype": "Currency",
+   "label": "Closing Statement Balance"
+  },
+  {
+   "fieldname": "section_break_iptv",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_only_unreconciled",
+   "fieldtype": "Check",
+   "label": "Show Only UnReconciled"
+  },
+  {
+   "fieldname": "html_results",
+   "fieldtype": "HTML",
+   "label": "Html Results"
+  },
+  {
+   "fieldname": "section_break_bwah",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "reconciliation_tool",
+   "fieldtype": "HTML",
+   "label": "Reconciliation Tool"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2025-12-19 02:37:16.095685",
+ "modified_by": "Administrator",
+ "module": "TrueBalance",
+ "name": "Debtor Reconciliation Tool",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

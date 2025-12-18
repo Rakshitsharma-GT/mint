@@ -75,7 +75,9 @@ const BulkInternalTransferForm = ({ transactions }: { transactions: Unreconciled
 
     const { call: createPaymentEntry, loading, error } = useFrappePostCall('truebalance.apis.bank_reconciliation.create_bulk_internal_transfer')
 
-    const onReconcile = useRefreshUnreconciledTransactions()
+    const selectedParty = useAtomValue(selectedPartyAtom)
+    const dataSource = selectedParty ? 'Debtor' : 'Bank'
+    const onReconcile = useRefreshUnreconciledTransactions(dataSource)
 
     const onSubmit = (data: { bank_account: string }) => {
 
@@ -159,7 +161,9 @@ const InternalTransferForm = ({ selectedBankAccount, selectedTransaction }: { se
         }
     })
 
-    const onReconcile = useRefreshUnreconciledTransactions()
+    const selectedParty = useAtomValue(selectedPartyAtom)
+    const dataSource = selectedParty ? 'Debtor' : 'Bank'
+    const onReconcile = useRefreshUnreconciledTransactions(dataSource)
 
     const { call: createPaymentEntry, loading, error } = useFrappePostCall('truebalance.apis.bank_reconciliation.create_internal_transfer')
 

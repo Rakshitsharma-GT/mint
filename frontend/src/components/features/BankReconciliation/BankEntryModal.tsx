@@ -77,7 +77,9 @@ const BulkBankEntryForm = ({ selectedTransactions }: { selectedTransactions: Unr
 
     const { call, loading, error } = useFrappePostCall('truebalance.apis.bank_reconciliation.create_bulk_bank_entry_and_reconcile')
 
-    const onReconcile = useRefreshUnreconciledTransactions()
+    const selectedParty = useAtomValue(selectedPartyAtom)
+    const dataSource = selectedParty ? 'Debtor' : 'Bank'
+    const onReconcile = useRefreshUnreconciledTransactions(dataSource)
 
     const setIsOpen = useSetAtom(bankRecRecordJournalEntryModalAtom)
 
@@ -172,7 +174,9 @@ const BankEntryForm = ({ selectedTransaction }: { selectedTransaction: Unreconci
         }
     })
 
-    const onReconcile = useRefreshUnreconciledTransactions()
+    const selectedParty = useAtomValue(selectedPartyAtom)
+    const dataSource = selectedParty ? 'Debtor' : 'Bank'
+    const onReconcile = useRefreshUnreconciledTransactions(dataSource)
 
     const { call: createBankEntry, loading, error } = useFrappePostCall('truebalance.apis.bank_reconciliation.create_bank_entry_and_reconcile')
 

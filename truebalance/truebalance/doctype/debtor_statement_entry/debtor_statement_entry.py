@@ -1,42 +1,31 @@
-# Copyright (c) 2025, The Commit Company (Algocode Technologies Pvt. Ltd.) and contributors
-# For license information, please see license.txt
-
-# import frappe
+from __future__ import annotations
+import frappe
 from frappe.model.document import Document
-
+import hashlib
 
 class DebtorStatementEntry(Document):
-	# begin: auto-generated types
-	# This code is auto-generated. Do not modify anything in this block.
+    def autoname(self):
+        # do not change name if already set
+        if self.name and not self.name.startswith("NEW-"):
+            return
 
-	from typing import TYPE_CHECKING
+        h = self.unique_hash or compute_hash(
+            self.company,
+            self.customer_reference,
+            self.statement_date,
+            self.payment_amount_credit,
+            self.payment_amount_debit
+        )
+        self.unique_hash = h
+        self.name = h
 
-	if TYPE_CHECKING:
-		from auto_house.auto_house.doctype.debtor_statement_audit.debtor_statement_audit import DebtorStatementAudit
-		from frappe.types import DF
 
-		allocated_amount: DF.Currency
-		audit_entries: DF.Table[DebtorStatementAudit]
-		company: DF.Link | None
-		currency: DF.Link | None
-		customer_reference: DF.Data | None
-		description: DF.Data | None
-		is_reconciled: DF.Check
-		matched_doctype: DF.Link | None
-		matched_document_name: DF.DynamicLink | None
-		party: DF.Data | None
-		party_type: DF.Data | None
-		payment_amount_credit: DF.Currency
-		payment_amount_debit: DF.Currency
-		reconciled_at: DF.Datetime | None
-		reconciled_by: DF.Data | None
-		reconciled_with: DF.Data | None
-		reference_number: DF.Data | None
-		source_import: DF.Link | None
-		statement_date: DF.Date | None
-		status: DF.Literal["Unreconciled", "Partially Reconciled", "Fully Reconciled"]
-		transaction_type: DF.Literal["Deposit", "Withdrawal"]
-		unallocated_amount: DF.Currency
-		unique_hash: DF.Data | None
-	# end: auto-generated types
-	pass
+def compute_hash(company, reference, date, credit, debit):
+    base = "|".join([
+        company or "",
+        reference or "",
+        date.isoformat() if hasattr(date, "isoformat") else (str(date) if date else ""),
+        str(credit or ""),
+        str(debit or "")
+    ])
+    return hashlib.md5(base.encode("utf-8")).hexdigest()

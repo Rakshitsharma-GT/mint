@@ -628,6 +628,29 @@ const VouchersForTransaction = ({ transaction, contentHeight, dataSource }: { tr
     // 12. PASS PROP TO CUSTOM HOOK
     const { data: vouchers, isLoading, error } = useGetVouchersForTransaction(transaction, dataSource)
 
+    const [selectedVouchers, setSelectedVouchers] = useState<LinkedPayment[]>([])
+
+    const toggleVoucherSelection = (voucher: LinkedPayment) => {
+        setSelectedVouchers(prev => {
+            const exists = prev.some(v => v.name === voucher.name && v.doctype === voucher.doctype)
+            if (exists) return prev.filter(v => !(v.name === voucher.name && v.doctype === voucher.doctype))
+            return [...prev, voucher]
+        })
+    }
+
+    // FIX: Pass dataSource to useReconcileTransaction hook
+    const { reconcileTransaction, loading } = useReconcileTransaction(dataSource)
+
+    const onReconcileSelected = async () => {
+        if (!selectedVouchers || selectedVouchers.length === 0) return
+        try {
+            await reconcileTransaction(transaction, selectedVouchers)
+            setSelectedVouchers([])
+        } catch (err) {
+            console.error('Reconcile selected failed', err)
+        }
+    }
+
     if (error) {
         return <ErrorBanner error={error} />
     }
@@ -655,11 +678,17 @@ const VouchersForTransaction = ({ transaction, contentHeight, dataSource }: { tr
             <Separator className="flex-1" />
         </div>
         {vouchers?.message.length === 0 && <MissingFiltersBanner text={_("No vouchers found for this transaction")} className="min-h-[10vh]" />}
+
+        <div className="flex items-center justify-end">
+            <Button disabled={selectedVouchers.length === 0 || loading} onClick={onReconcileSelected} variant={selectedVouchers.length > 0 ? 'default' : 'ghost'}>
+                {loading ? _('Reconciling...') : _('Reconcile Selected')}
+            </Button>
+        </div>
+
         <Virtuoso
             data={vouchers?.message}
             itemContent={(index, voucher) => (
-                // FIX: Pass dataSource to VoucherItem
-                <VoucherItem voucher={voucher} index={index} dataSource={dataSource} />
+                <VoucherItem voucher={voucher} index={index} dataSource={dataSource} isSelected={selectedVouchers.some(v => v.name === voucher.name && v.doctype === voucher.doctype)} onToggle={() => toggleVoucherSelection(voucher)} />
             )}
             style={{ height: contentHeight }}
             totalCount={vouchers?.message.length}
@@ -668,7 +697,7 @@ const VouchersForTransaction = ({ transaction, contentHeight, dataSource }: { tr
 }
 
 // FIX: UPDATE VoucherItem SIGNATURE AND PASS dataSource TO HOOK
-const VoucherItem = ({ voucher, index, dataSource }: { voucher: LinkedPayment, index: number, dataSource: "Bank" | "Debtor" }) => {
+const VoucherItem = ({ voucher, index, dataSource, isSelected, onToggle }: { voucher: LinkedPayment, index: number, dataSource: "Bank" | "Debtor", isSelected?: boolean, onToggle?: () => void }) => {
 
     const selectedBank = useAtomValue(selectedBankAccountAtom)
     const selectedParty = useAtomValue(selectedPartyAtom)
@@ -718,6 +747,7 @@ const VoucherItem = ({ voucher, index, dataSource }: { voucher: LinkedPayment, i
             <div className="flex justify-between items-end gap-2">
                 <div className="flex flex-col gap-2">
                     <div className="flex items-center gap-2">
+                        <input type="checkbox" checked={!!isSelected} onChange={() => onToggle && onToggle()} className="w-4 h-4" />
                         <Badge variant='secondary' className={cn("text-sm rounded-sm", isSuggested ? "bg-amber-100 text-amber-700" : "bg-secondary")}>{_(voucher.doctype)}</Badge>
                         <a target="_blank"
                             href={`/app/${slug(voucher.doctype)}/${voucher.name}`}

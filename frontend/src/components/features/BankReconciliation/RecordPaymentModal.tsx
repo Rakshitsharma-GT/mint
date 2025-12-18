@@ -92,7 +92,9 @@ const BulkPaymentEntryForm = ({ transactions }: { transactions: UnreconciledTran
 
     const { call: createPaymentEntry, loading, error } = useFrappePostCall('truebalance.apis.bank_reconciliation.create_bulk_payment_entry_and_reconcile')
 
-    const onReconcile = useRefreshUnreconciledTransactions()
+    const selectedParty = useAtomValue(selectedPartyAtom)
+    const dataSource = selectedParty ? 'Debtor' : 'Bank'
+    const onReconcile = useRefreshUnreconciledTransactions(dataSource)
 
     const onSubmit = (data: { party_type: PaymentEntry['party_type'], party: PaymentEntry['party'], account: string, mode_of_payment: PaymentEntry['mode_of_payment'] }) => {
 
@@ -275,7 +277,9 @@ const PaymentEntryForm = ({ selectedTransaction, selectedBankAccount }: { select
         }
     })
 
-    const onReconcile = useRefreshUnreconciledTransactions()
+    const selectedParty = useAtomValue(selectedPartyAtom)
+    const dataSource = selectedParty ? 'Debtor' : 'Bank'
+    const onReconcile = useRefreshUnreconciledTransactions(dataSource)
 
     const setUnpaidInvoiceOpen = useSetAtom(isUnpaidInvoicesButtonOpen)
 

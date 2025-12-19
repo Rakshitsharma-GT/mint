@@ -40,7 +40,7 @@ const SelectedTransactionDetails = ({ transaction, showAccount = false, account 
                     <div className='flex justify-between'>
                         <div className='flex flex-col gap-2'>
                             <div className='flex flex-col'> {bankLogo ? <img
-                                src={`/assets/mint/mint/${bankLogo.logo}`}
+                                src={`/assets/truebalance/truebalance/${bankLogo.logo}`}
                                 alt={bankLogo?.keywords.join(', ') || ''}
                                 className="max-w-20 object-left h-10 object-contain"
                             /> :

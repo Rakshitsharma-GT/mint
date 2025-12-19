@@ -25,15 +25,15 @@ add_to_apps_screen = [
 # ------------------
 
 # include js, css files in header of desk.html
-# app_include_css = "/assets/mint/css/mint.css"
-# app_include_js = "/assets/mint/js/mint.js"
+# app_include_css = "/assets/truebalance/css/truebalance.css"
+# app_include_js = "/assets/truebalance/js/truebalance.js"
 
 # include js, css files in header of web template
-# web_include_css = "/assets/mint/css/mint.css"
-# web_include_js = "/assets/mint/js/mint.js"
+# web_include_css = "/assets/truebalance/css/truebalance.css"
+# web_include_js = "/assets/truebalance/js/truebalance.js"
 
 # include custom scss in every website theme (without file extension ".scss")
-# website_theme_scss = "mint/public/scss/website"
+# website_theme_scss = "truebalance/public/scss/website"
 
 # include js, css files in header of web form
 # webform_include_js = {"doctype": "public/js/doctype.js"}
@@ -51,7 +51,7 @@ add_to_apps_screen = [
 # Svg Icons
 # ------------------
 # include app icons in desk
-# app_include_icons = "mint/public/icons.svg"
+# app_include_icons = "truebalance/public/icons.svg"
 
 # Home Pages
 # ----------
@@ -75,43 +75,43 @@ add_to_apps_screen = [
 
 # add methods and filters to jinja environment
 # jinja = {
-# 	"methods": "mint.utils.jinja_methods",
-# 	"filters": "mint.utils.jinja_filters"
+# 	"methods": "truebalance.utils.jinja_methods",
+# 	"filters": "truebalance.utils.jinja_filters"
 # }
 
 # Installation
 # ------------
 
-# before_install = "mint.install.before_install"
+# before_install = "truebalance.install.before_install"
 after_install = "truebalance.setup.install.after_install"
 
 # Uninstallation
 # ------------
 
-# before_uninstall = "mint.uninstall.before_uninstall"
-# after_uninstall = "mint.uninstall.after_uninstall"
+# before_uninstall = "truebalance.uninstall.before_uninstall"
+# after_uninstall = "truebalance.uninstall.after_uninstall"
 
 # Integration Setup
 # ------------------
 # To set up dependencies/integrations with other apps
 # Name of the app being installed is passed as an argument
 
-# before_app_install = "mint.utils.before_app_install"
-# after_app_install = "mint.utils.after_app_install"
+# before_app_install = "truebalance.utils.before_app_install"
+# after_app_install = "truebalance.utils.after_app_install"
 
 # Integration Cleanup
 # -------------------
 # To clean up dependencies/integrations with other apps
 # Name of the app being uninstalled is passed as an argument
 
-# before_app_uninstall = "mint.utils.before_app_uninstall"
-# after_app_uninstall = "mint.utils.after_app_uninstall"
+# before_app_uninstall = "truebalance.utils.before_app_uninstall"
+# after_app_uninstall = "truebalance.utils.after_app_uninstall"
 
 # Desk Notifications
 # ------------------
 # See frappe.core.notifications.get_notification_config
 
-# notification_config = "mint.notifications.get_notification_config"
+# notification_config = "truebalance.notifications.get_notification_config"
 
 # Permissions
 # -----------
@@ -157,20 +157,20 @@ scheduler_events = {
 # Testing
 # -------
 
-# before_tests = "mint.install.before_tests"
+# before_tests = "truebalance.install.before_tests"
 
 # Overriding Methods
 # ------------------------------
 #
 # override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "mint.event.get_events"
+# 	"frappe.desk.doctype.event.event.get_events": "truebalance.event.get_events"
 # }
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
 # along with any modifications made in other Frappe apps
 # override_doctype_dashboards = {
-# 	"Task": "mint.task.get_dashboard_data"
+# 	"Task": "truebalance.task.get_dashboard_data"
 # }
 
 # exempt linked doctypes from being automatically cancelled
@@ -184,13 +184,13 @@ scheduler_events = {
 
 # Request Events
 # ----------------
-# before_request = ["mint.utils.before_request"]
-# after_request = ["mint.utils.after_request"]
+# before_request = ["truebalance.utils.before_request"]
+# after_request = ["truebalance.utils.after_request"]
 
 # Job Events
 # ----------
-# before_job = ["mint.utils.before_job"]
-# after_job = ["mint.utils.after_job"]
+# before_job = ["truebalance.utils.before_job"]
+# after_job = ["truebalance.utils.after_job"]
 
 # User Data Protection
 # --------------------
@@ -220,7 +220,7 @@ scheduler_events = {
 # --------------------------------
 
 # auth_hooks = [
-# 	"mint.auth.validate"
+# 	"truebalance.auth.validate"
 # ]
 
 # Automatically update python controller files with type annotations for this app.

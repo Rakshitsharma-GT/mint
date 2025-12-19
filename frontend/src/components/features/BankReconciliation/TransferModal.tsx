@@ -309,7 +309,7 @@ const BankOrCashPicker = ({ bankAccount, onAccountChange, selectedAccount, compa
             >
                 {bank.logo ?
                     <img
-                        src={`/assets/mint/mint/${bank.logo}`}
+                        src={`/assets/truebalance/truebalance/${bank.logo}`}
                         alt={bank.bank || ''}
                         className='w-12 h-12 object-contain'
                     /> : <div className='flex items-center justify-center h-10 w-10'>
@@ -440,7 +440,7 @@ const RecommendedTransferAccount = ({ transaction, onAccountChange }: { transact
                     <div className="flex items-center gap-2">
                         {bankLogo ? (
                             <img
-                                src={`/assets/mint/mint/${bankLogo.logo}`}
+                                src={`/assets/truebalance/truebalance/${bankLogo.logo}`}
                                 alt={bankLogo.keywords.join(', ') || ''}
                                 className="h-8 max-w-24 object-contain"
                             />

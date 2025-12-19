@@ -75,7 +75,7 @@ const BankPickerItem = ({ bank }: { bank: SelectedBank }) => {
         )}
     >
         {bank.logo ? <img
-            src={`/assets/mint/mint/${bank.logo}`}
+            src={`/assets/truebalance/truebalance/${bank.logo}`}
             alt={bank.bank || bank.name || ''}
             className="max-w-24 object-left h-10 object-contain mb-1"
         /> : <div className="rounded-md flex items-center h-10 gap-2">

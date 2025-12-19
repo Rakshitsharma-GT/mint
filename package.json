@@ -1,5 +1,5 @@
 {
-  "name": "mint",
+  "name": "truebalance",
   "version": "1.0.0",
   "description": "Bank reconciliation made simple for ERPNext",
   "main": "index.js",

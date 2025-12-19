@@ -6,6 +6,6 @@ tags
 node_modules
 __pycache__
 
-mint/public/mint
-mint/public/node_modules
-mint/www/mint.html
+truebalance/public/mint
+truebalance/public/node_modules
+truebalance/www/mint.html
